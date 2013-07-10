@@ -119,7 +119,8 @@
     // parse a markdown document into internal structure that can be used
     // to display a presentation
     parseMarkdown: function(content) {
-      var tree = markdown.toHTMLTree(content)
+      var tree = markdown.toHTMLTree(content, 'Github')
+      console.warn(tree)
 
       var top = {
           level: 0,

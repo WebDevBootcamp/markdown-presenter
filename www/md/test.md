@@ -12,3 +12,30 @@ The stuff
 * Second
 * Third
 
+## Three Levels Deep
+
+This is the overview
+
+### First Note
+
+### Second Note
+
+## Code Fragment
+
+Comments about what is going on
+
+Standard MD block
+
+    var foo = function() {
+      something = 12
+    }
+
+Fenced/GFM block
+
+```js
+var foo = function() {
+  something = 12
+}
+```
+
+Snappy post-code comments
