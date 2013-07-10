@@ -94,6 +94,7 @@
                 .addClass('btn-success')
             }
             catch(error) {
+              console.error(error.message)
               app.displaySettingsError(error.message)
               loadButton
                 .removeClass('btn-warning')
@@ -120,7 +121,6 @@
     // to display a presentation
     parseMarkdown: function(content) {
       var tree = markdown.toHTMLTree(content, 'Github')
-      console.warn(tree)
 
       var top = {
           level: 0,
@@ -303,9 +303,36 @@
         var content = _.cloneDeep(page.content)
         content.unshift('html')
         el.append(markdown.renderJsonML(content))
+
+        // attach ace editor to code blocks
+        $('pre').each(function(index, el) {
+          var $el = $(el)
+          var syntax = $el.attr('class')
+
+          var editor = ace.edit(el)
+          if(syntax) {
+            editor.getSession().setMode('ace/mode/' + syntax)
+          }
+          editor.getSession().setTabSize(2)
+
+          var resize = _.debounce(function() {
+            app.autoSizeEditor(editor, $el)
+          }, 500)
+
+          editor.on('change', resize)
+          resize()
+        })
       }
 
       app.updateSearchHistory( { md: markdownPath, p: pageIndex } )
+    },
+
+    autoSizeEditor: function(editor, el) {
+      var lines = editor.getSession().getDocument().getLength()
+      var height = (lines * editor.renderer.lineHeight) +
+        editor.renderer.scrollBar.getWidth()
+      el.height(height)
+      editor.resize()
     },
 
     onKeyUp: function(ev) {

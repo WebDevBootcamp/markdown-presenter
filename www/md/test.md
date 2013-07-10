@@ -32,7 +32,7 @@ Standard MD block
 
 Fenced/GFM block
 
-```js
+```javascript
 var foo = function() {
   something = 12
 }
