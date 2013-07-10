@@ -1,0 +1,29 @@
+#editor {
+  height: 100px;
+  width: 400px;
+}
+
+.display-previous,
+.display-next {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  text-align: center;
+  padding-top: 40%;
+  font-weight: bold;
+  font-size: 125%;
+  cursor: pointer;
+  color: transparent;
+}
+.display-previous {
+  left: 0;
+}
+.display-next {
+  right: 0;
+}
+.display-previous:hover,
+.display-next:hover {
+  background-color: rgba(0, 0, 0, .25);
+  color: #666;
+}
