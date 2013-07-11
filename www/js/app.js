@@ -140,7 +140,8 @@
           var level = parseInt(tag[1])
           var next = {
             level: level,
-            title: node[1],
+            title: node[1], // page title
+            label: node[1], // outline label
             children: [],
             content: []
           }
@@ -154,6 +155,13 @@
           while(top.level >= level) {
             stack.pop()
             top = stack[stack.length - 1]
+          }
+
+          // keep parent title for h3 - this is a subtopic within the larger
+          // concept
+          if(tag === 'h3') {
+            next.title = top.title
+            next.content.push(node)
           }
 
           top.children.push(next)
@@ -207,7 +215,7 @@
           thisOffset++
 
           var item = $('<li>')
-            .append('<a class="navigate" href="' + href + '">' + child.title + '</a>')
+            .append('<a class="navigate" href="' + href + '">' + child.label + '</a>')
             .appendTo(el)
 
           if(child.children && (child.children.length > 0)) {
