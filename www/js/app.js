@@ -277,6 +277,48 @@
       }
     },
 
+    executeCode: function(ev) {
+      var pre = $(ev.target).closest('.btn-group').next('pre.ace_editor')
+      var code = pre.data('editor').getValue()
+
+      app.clearCodeAlert(pre)
+
+      // wrap things in an anonymous function so bare returns work
+      code = '(function(){' + code + '})()'
+      try {
+        // be gentle :)
+        var result = eval(code)
+
+        app.displayCodeAlert(pre, result, 'success')
+      }
+      catch(error) {
+        app.displayCodeAlert(pre, error.message, 'error')
+      }
+    },
+
+    refreshCode: function(ev) {
+      var pre = $(ev.target).closest('.btn-group').next('pre.ace_editor')
+      var editor = pre.data('editor')
+      var original = pre.data('original')
+      editor.setValue(original)
+
+      app.clearCodeAlert(pre)
+    },
+
+    displayCodeAlert: function(el, details, severity) {
+      // need to format this better - JSON.stringify but safe
+      var message = String(details)
+
+      $('<div class="alert alert-' + severity + '">')
+        .append('<button type="button" class="close" data-dismiss="alert">&times;</button>')
+        .append(message)
+        .insertAfter(el)
+    },
+
+    clearCodeAlert: function(el) {
+      el.next('.alert').remove()
+    },
+
     renderPage: function(newIndex) {
       if(!_.isNumber(newIndex) || (newIndex < 0)) {
         newIndex = 0
@@ -306,36 +348,60 @@
 
         // attach ace editor to code blocks
         $('pre').each(function(index, el) {
-          var $el = $(el)
-          var syntax = $el.attr('class')
-
-          var editor = ace.edit(el)
-          if(syntax) {
-            editor.getSession().setMode('ace/mode/' + syntax)
-          }
-          editor.getSession().setTabSize(2)
-
-          var resize = _.debounce(function() {
-            app.autoSizeEditor(editor, $el)
-          }, 500)
-
-          editor.on('change', resize)
-          resize()
+          app.attachCodeEditor($(el))
         })
       }
 
       app.updateSearchHistory( { md: markdownPath, p: pageIndex } )
     },
 
+    attachCodeEditor: function(el) {
+      var syntax = el.attr('class')
+      var editor = ace.edit(el[0])
+      editor.setTheme('ace/theme/chrome')
+      editor.getSession().setTabSize(2)
+
+      if(syntax) {
+        editor.getSession().setMode('ace/mode/' + syntax)
+
+        // store the editor and original code fragment so we can restore
+        el.data({
+          editor: editor,
+          original: editor.getValue()
+        })
+
+        // attach a toolbar to interact with javascript code
+        if(syntax === 'javascript') {
+          $('<div class="code-toolbar btn-group btn-group-vertical pull-right">')
+            .append($('<button class="code-execute btn"><i class="icon-play" /></button>'))
+            .append($('<button class="code-refresh btn"><i class="icon-refresh" /></button>'))
+            .insertBefore(el)
+        }
+      }
+
+      // size the editor to fit the contents initially
+      var resize = function() {
+        app.autoSizeEditor(editor, el)
+      }
+      resize()
+
+      // also hook up listener to periodically resize when the content changes
+      editor.on('change', _.debounce(resize, 500))
+    },
+
     autoSizeEditor: function(editor, el) {
       var lines = editor.getSession().getDocument().getLength()
       var height = (lines * editor.renderer.lineHeight) +
         editor.renderer.scrollBar.getWidth()
-      el.height(height)
+      el.height(Math.min(500, Math.max(40, height)))
       editor.resize()
     },
 
     onKeyUp: function(ev) {
+      // need to allow keyboard navigation in code blocks
+      if($(ev.target).closest('pre').length) {
+        return
+      }
       if(ev.which === 37) {
         app.displayPrevious()
       }
@@ -359,6 +425,8 @@
       '.navigate click': 'handleNavigate',
       '.display-previous click': 'displayPrevious',
       '.display-next click': 'displayNext',
+      '.code-execute click': 'executeCode',
+      '.code-refresh click': 'refreshCode',
       'document keyup': 'onKeyUp',
       'form submit': 'onFormSubmit'
     }
