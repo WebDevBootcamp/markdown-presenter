@@ -220,7 +220,9 @@
 
           if(child.children && (child.children.length > 0)) {
             var childList = $('<ul>').appendTo(item)
-            thisOffset += appendChildren(child.children, childList, pageOffset)
+            var childOffset = appendChildren(child.children, childList, pageOffset)
+            pageOffset += childOffset
+            thisOffset += childOffset
           }
         }
 
