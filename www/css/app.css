@@ -31,3 +31,20 @@
 .code-toolbar {
   padding-left: 10px;
 }
+
+.full-width {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.show-grid [class*="span"] {
+  background-color: #eee;
+  text-align: center;
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+  min-height: 40px;
+  line-height: 40px;
+  margin-bottom: 20px;
+}
