@@ -81,7 +81,7 @@
         $.ajax(path, {
           success: function(content) {
             try {
-              var presentation = app.parseMarkdown(content)
+              var presentation = app.parseMarkdown(content, path)
 
               var sectionList = $('<ul>').appendTo(outline)
               app.updatePresentationOutline(presentation, sectionList)
@@ -119,7 +119,7 @@
 
     // parse a markdown document into internal structure that can be used
     // to display a presentation
-    parseMarkdown: function(content) {
+    parseMarkdown: function(content, path) {
       var tree = markdown.toHTMLTree(content, 'Github')
 
       var top = {
@@ -171,7 +171,8 @@
         // otherwise add content to the current section
         else {
           if(top.level > 0) {
-            stack[stack.length - 1].content.push(node)
+            var fixed = app.fixupContent(node, path)
+            stack[stack.length - 1].content.push(fixed)
           }
           else {
             throw new Error('Found content outside of a section')
@@ -180,6 +181,23 @@
       }
 
       return stack[0].children
+    },
+
+    fixupContent: function(node, path) {
+      // get the base path for the markdown source
+      var pos = path.lastIndexOf('/')
+      var base = path.substring(0, pos + 1)
+
+      return _.cloneDeep(node, function(item) {
+        // update relative image links to have same base URL as markdown source
+        if(item[0] === 'img') {
+          var src = item[1].src
+          if(!src.match(/^https?:\/\//)) {
+            item[1].src = base + src
+          }
+          return item
+        }
+      })
     },
 
     walkPresentation: function(node, callback) {

@@ -61,6 +61,8 @@ This is a paragraph
   </tr>
 </table>
 
+Bootstrap grid example
+
 <div class="full-width container">
   <div class="row show-grid">
     <div class="span1">span1</div>
@@ -91,4 +93,17 @@ This is a paragraph
     <div class="span3">span3</div>
   </div>
 </div>
+
+
+## Images should work too
+
+Relative image:
+
+![Ice baby](./img/vicebest2.jpg "Something here")
+
+Absolute link:
+
+![](http://farm3.staticflickr.com/2608/3801835477_b87502a888.jpg)
+
+[hat tip](http://macwright.org/biggie/)
 
