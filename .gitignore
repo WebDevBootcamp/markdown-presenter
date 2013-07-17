@@ -13,5 +13,6 @@ results
 
 npm-debug.log
 
+deploy
 node_modules
 www/vendor
