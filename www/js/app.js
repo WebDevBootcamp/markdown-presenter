@@ -4,7 +4,7 @@
   var markdownPath = ''
   var activePresentation = null
   var pageList = []
-  var pageIndex = 0
+  var pageIndex = -1
 
   var app = {
     init: function() {
@@ -195,6 +195,15 @@
           if(!src.match(/^https?:\/\//)) {
             item[1].src = base + src
           }
+          return item
+        }
+        // open absolute links in new page/tab
+        else if(item[0] === 'a') {
+          var href = item[1].href
+          if(href && href.match(/^https?:\/\//)) {
+            item[1].target = '_blank'
+          }
+          console.warn(item)
           return item
         }
       })
