@@ -32,6 +32,23 @@
 .code-toolbar {
   padding-left: 10px;
 }
+.code-toolbar .btn {
+  min-width: 45px;
+}
+
+.alert-muted {
+  background-color: #eeeeee;
+  border-color: #dcdcdc;
+  color: #666666;
+  text-shadow: none;
+}
+.alert-muted h1,
+.alert-muted h2,
+.alert-muted h3,
+.alert-muted h4 {
+  color: #666666;
+  text-shadow: none;
+}
 
 .full-width {
   position: absolute;
@@ -39,6 +56,7 @@
   right: 0;
 }
 
+/* steal a few things to demonstrate Bootstrap functionality*/
 .show-grid [class*="span"] {
   background-color: #eee;
   text-align: center;
@@ -48,4 +66,10 @@
   min-height: 40px;
   line-height: 40px;
   margin-bottom: 20px;
+}
+.is-hidden {
+  color: #ccc;
+}
+.is-visible {
+  color: #468847;
 }

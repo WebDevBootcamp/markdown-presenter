@@ -203,7 +203,6 @@
           if(href && href.match(/^https?:\/\//)) {
             item[1].target = '_blank'
           }
-          console.warn(item)
           return item
         }
       })
@@ -316,17 +315,40 @@
 
     executeCode: function(ev) {
       var pre = $(ev.target).closest('.btn-group').next('pre.ace_editor')
-      var code = pre.data('editor').getValue()
+      var editor = pre.data('editor')
 
       app.clearCodeAlert(pre)
 
+      var syntax = pre.attr('class').split('.')[0]
+      if(syntax === 'javascript') {
+        app.executeJavaScript(editor.getValue(), pre)
+      }
+      else if(syntax === 'html') {
+        app.executeHtml(editor.getValue(), pre)
+      }
+    },
+
+    executeJavaScript: function(code, pre) {
       // wrap things in an anonymous function so bare returns work
-      code = '(function(){' + code + '})()'
+      var code = '(function(){' + code + '})()'
       try {
         // be gentle :)
         var result = eval(code)
 
         app.displayCodeAlert(pre, result, 'success')
+      }
+      catch(error) {
+        app.displayCodeAlert(pre, error.message, 'error')
+      }
+    },
+
+    executeHtml: function(code, pre) {
+      try {
+        var el = $(code)
+        $('<div class="alert alert-muted">')
+          .append('<button type="button" class="close" data-dismiss="alert">&times;</button>')
+          .append(el)
+          .insertAfter(pre)
       }
       catch(error) {
         app.displayCodeAlert(pre, error.message, 'error')
@@ -393,10 +415,15 @@
     },
 
     attachCodeEditor: function(el) {
-      var syntax = el.attr('class')
+      var classes = el.attr('class').split('.')
+      var syntax = classes[0]
       var editor = ace.edit(el[0])
       editor.setTheme('ace/theme/chrome')
       editor.getSession().setTabSize(2)
+
+      if(_.contains(classes, 'readonly')) {
+        editor.setReadOnly(true)
+      }
 
       if(syntax) {
         editor.getSession().setMode('ace/mode/' + syntax)
@@ -407,12 +434,16 @@
           original: editor.getValue()
         })
 
-        // attach a toolbar to interact with javascript code
-        if(syntax === 'javascript') {
-          $('<div class="code-toolbar btn-group btn-group-vertical pull-right">')
-            .append($('<button class="code-execute btn"><i class="icon-play" /></button>'))
+        // attach a toolbar to interact with the fragment if needed
+        if(_.contains(classes, 'interactive')) {
+          var toolbar = $('<div class="code-toolbar btn-group btn-group-vertical pull-right">')
+            .append($('<button class="code-execute btn"><i class="icon-code" /></button>'))
             .append($('<button class="code-refresh btn"><i class="icon-refresh" /></button>'))
             .insertBefore(el)
+
+          if(_.contains(classes, 'onload')) {
+            toolbar.find('.code-execute').click()
+          }
         }
       }
 
