@@ -205,6 +205,15 @@
           }
           return item
         }
+        else if(item[0] === 'pre') {
+          // parser adds leading newline to code snippets in some cases
+          return _.collect(item, function(child) {
+            if(_.isArray(child)) {
+              child[1]= child[1].replace(/^[\r\n]+/, '')
+            }
+            return child
+          })
+        }
       })
     },
 
@@ -415,7 +424,7 @@
     },
 
     attachCodeEditor: function(el) {
-      var classes = el.attr('class').split('.')
+      var classes = (el.attr('class') || '').split('.')
       var syntax = classes[0]
       var editor = ace.edit(el[0])
       editor.setTheme('ace/theme/chrome')
@@ -437,8 +446,8 @@
         // attach a toolbar to interact with the fragment if needed
         if(_.contains(classes, 'interactive')) {
           var toolbar = $('<div class="code-toolbar btn-group btn-group-vertical pull-right">')
-            .append($('<button class="code-execute btn"><i class="icon-code" /></button>'))
-            .append($('<button class="code-refresh btn"><i class="icon-refresh" /></button>'))
+            .append($('<button title="Execute Code" class="code-execute btn"><i class="icon-code" /></button>'))
+            .append($('<button title="Reset Example" class="code-refresh btn"><i class="icon-refresh" /></button>'))
             .insertBefore(el)
 
           if(_.contains(classes, 'onload')) {
