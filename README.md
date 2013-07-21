@@ -18,7 +18,10 @@ The following tools are used to add to the awesomeness:
 that provides an intermediate tree format for mucking around with the content
 * [ACE Ajax Editor](http://ace.ajax.org) - Provides syntax highlighting and
 text editing capabilities for code snippets
-* [Bootstrap](http://twitter.github.io/bootstrap/) - Of course...
+* [Bootstrap](http://twitter.github.io/bootstrap/),
+  [Bootswatch](http://bootswatch.com/), and
+  [Font Awesome](http://fortawesome.github.io/Font-Awesome/) - To keep things
+  looking nice
 
 ## Presentation Layout
 
