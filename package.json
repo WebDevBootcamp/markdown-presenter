@@ -3,6 +3,7 @@
   "description": "Lightweight online presentation framework using markdown",
   "version": "0.0.0",
   "dependencies": {
-    "express": "3.3.3"
+    "express": "3.3.3",
+    "commander": "2.0.0"
   }
 }
