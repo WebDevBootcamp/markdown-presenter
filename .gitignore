@@ -13,6 +13,5 @@ results
 
 npm-debug.log
 
-deploy
+components
 node_modules
-www/vendor
