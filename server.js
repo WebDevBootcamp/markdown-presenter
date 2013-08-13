@@ -13,15 +13,19 @@ app.use('/', express.static(__dirname))
 
 // mount additional path if needed
 if(program.mount) {
+  var mount = program.mount
   var fragment
-  var pos = program.mount.lastIndexOf('/')
+  var pos = mount.lastIndexOf('/')
   if(pos > 0)
-    fragment = program.mount.substring(pos)
+    fragment = mount.substring(pos)
   else
-    fragment = '/' + program.mount
+    fragment = '/' + mount
 
-  console.log('mounting ' + program.mount + ' at '  + fragment)
-  app.use(fragment, express.static(path.join(__dirname, program.mount)))
+  console.log('mounting ' + mount + ' at '  + fragment)
+  if(mount[0] !== '/') {
+    mount = path.join(__dirname, mount)
+  }
+  app.use(fragment, express.static(mount))
 }
 
 app.listen(3000)
