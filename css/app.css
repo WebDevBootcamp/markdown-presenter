@@ -73,3 +73,9 @@
 .is-visible {
   color: #468847;
 }
+
+/* TODO - move to bootswatch */
+.navbar-brand {
+  max-width: 500px;
+}
+

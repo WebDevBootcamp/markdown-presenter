@@ -323,12 +323,12 @@
     },
 
     executeCode: function(ev) {
-      var pre = $(ev.target).closest('.btn-group').next('pre.ace_editor')
+      var pre = $(ev.target).closest('.btn-group-vertical').next('pre.ace_editor')
       var editor = pre.data('editor')
 
       app.clearExecuteResults(pre)
 
-      var results = $('<div class="execute-results">')
+      var results = $('<div class="execute-results panel">')
         .insertAfter(pre)
 
       var syntax = pre.attr('class').split('.')[0]
@@ -353,14 +353,14 @@
         app.displayCodeAlert(pre, result, 'success')
       }
       catch(error) {
-        app.displayCodeAlert(pre, error.message, 'error')
+        app.displayCodeAlert(pre, error.message, 'danger')
       }
     },
 
     executeHtml: function(code, pre) {
       try {
         var el = $(code)
-        $('<div class="alert alert-muted">')
+        $('<div class="panel-heading">')
           .append('<button type="button" class="close" data-dismiss="alert">&times;</button>')
           .append(el)
           .prependTo(pre.next('.execute-results'))
@@ -371,7 +371,7 @@
     },
 
     refreshCode: function(ev) {
-      var pre = $(ev.target).closest('.btn-group').next('pre.ace_editor')
+      var pre = $(ev.target).closest('.btn-group-vertical').next('pre.ace_editor')
       var editor = pre.data('editor')
       var original = pre.data('original')
       editor.setValue(original)
@@ -383,7 +383,7 @@
       // need to format this better - JSON.stringify but safe
       var message = String(details)
 
-      $('<div class="alert alert-' + severity + '">')
+      $('<div class="panel-heading panel-' + severity + '">')
         .append('<button type="button" class="close" data-dismiss="alert">&times;</button>')
         .append(message)
         .prependTo(el.next('.execute-results'))
@@ -484,7 +484,7 @@
 
         // attach a toolbar to interact with the fragment if needed
         if(_.contains(classes, 'interactive')) {
-          var toolbar = $('<div class="code-toolbar btn-group btn-group-vertical pull-right">')
+          var toolbar = $('<div class="code-toolbar btn-group-vertical pull-right">')
             .append($('<button title="Execute Code" class="code-execute btn"><i class="icon-code" /></button>'))
             .append($('<button title="Reset Example" class="code-refresh btn"><i class="icon-refresh" /></button>'))
             .insertBefore(el)

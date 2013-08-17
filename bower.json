@@ -2,9 +2,11 @@
   "name": "markdown-presenter",
   "version": "0.0.0",
   "dependencies": {
-    "bootstrap.css": "https://github.com/bowerjs/bootstrap.git",
+    "bootstrap": "3.0.0-rc1",
     "font-awesome": "3.2.1",
     "markdown-js": "git@github.com:WebDevBootcamp/markdown-js.git",
-    "ace-builds": "1.1.1"
+    "ace-builds": "1.1.1",
+    "jquery": "~2.0.3",
+    "lodash": "~1.3.1"
   }
 }
