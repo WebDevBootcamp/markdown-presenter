@@ -326,10 +326,14 @@
       var pre = $(ev.target).closest('.btn-group').next('pre.ace_editor')
       var editor = pre.data('editor')
 
-      app.clearCodeAlert(pre)
+      app.clearExecuteResults(pre)
+
+      var results = $('<div class="execute-results">')
+        .insertAfter(pre)
 
       var syntax = pre.attr('class').split('.')[0]
       if(syntax === 'javascript') {
+        app.hookConsole(results)
         app.executeJavaScript(editor.getValue(), pre)
       }
       else if(syntax === 'html') {
@@ -339,7 +343,9 @@
 
     executeJavaScript: function(code, pre) {
       // wrap things in an anonymous function so bare returns work
-      var code = '(function(){' + code + '})()'
+      // add newline before the trailing bracket so code that ends in a 
+      // comment doesn't cause a problem
+      var code = '(function(){' + code + '\n})()'
       try {
         // be gentle :)
         var result = eval(code)
@@ -357,7 +363,7 @@
         $('<div class="alert alert-muted">')
           .append('<button type="button" class="close" data-dismiss="alert">&times;</button>')
           .append(el)
-          .insertAfter(pre)
+          .prependTo(pre.next('.execute-results'))
       }
       catch(error) {
         app.displayCodeAlert(pre, error.message, 'error')
@@ -370,7 +376,7 @@
       var original = pre.data('original')
       editor.setValue(original)
 
-      app.clearCodeAlert(pre)
+      app.clearExecuteResults(pre)
     },
 
     displayCodeAlert: function(el, details, severity) {
@@ -380,11 +386,41 @@
       $('<div class="alert alert-' + severity + '">')
         .append('<button type="button" class="close" data-dismiss="alert">&times;</button>')
         .append(message)
-        .insertAfter(el)
+        .prependTo(el.next('.execute-results'))
     },
 
-    clearCodeAlert: function(el) {
-      el.next('.alert').remove()
+    clearExecuteResults: function(el) {
+      app.unhookConsole()
+      el.next('.execute-results').remove()
+    },
+
+    hookConsole: function(el) {
+      app._restoreConsole = {}
+
+      var methods = [ 'log', 'warn', 'error', 'debug' ]
+      _.each(methods, function(name) {
+        app._restoreConsole[name] = console[name]
+
+        console[name] = function(message) {
+          $('<div class="log-message">')
+            .text(name + ': ' + message)
+            .appendTo(el)
+
+          // call original method as well
+          app._restoreConsole[name].call(console, message)
+        }
+      })
+    },
+
+    unhookConsole: function() {
+      if(app._restoreConsole) {
+        var keys = _.keys(app._restoreConsole)
+        for(var index = 0; index < keys.length; index++) {
+          var key = keys[index]
+          console[key] = app._restoreConsole[key]
+        }
+        delete app._restoreConsole
+      }
     },
 
     renderPage: function(newIndex) {
@@ -407,6 +443,9 @@
       $('<h1>')
         .text(page.title)
         .appendTo(el)
+
+      // update the document title in the browser
+      document.title = page.title
 
       if(page.content.length) {
         // renderJsonML seems to trash the array passed in, so clone it first
