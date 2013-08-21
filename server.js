@@ -1,5 +1,5 @@
-var express = require('express')
-var program = require('commander')
+var express = require('express');
+var program = require('commander');
 var path = require('path')
 
 program
@@ -7,27 +7,26 @@ program
   .option('-m, --mount [path]', 'Mount resource')
   .parse(process.argv);
 
-var app = express()
+var app = express();
 
-app.use('/', express.static(__dirname))
+app.use('/', express.static(__dirname));
 
 // mount additional path if needed
 if(program.mount) {
-  var mount = program.mount
-  var fragment
-  var pos = mount.lastIndexOf('/')
+  var mount = program.mount;
+  var fragment;
+  var pos = mount.lastIndexOf('/');
   if(pos > 0)
-    fragment = mount.substring(pos)
+    fragment = mount.substring(pos);
   else
-    fragment = '/' + mount
+    fragment = '/' + mount;
 
-  console.log('mounting ' + mount + ' at '  + fragment)
+  console.log('mounting ' + mount + ' at '  + fragment);
   if(mount[0] !== '/') {
-    mount = path.join(__dirname, mount)
+    mount = path.join(__dirname, mount);
   }
-  app.use(fragment, express.static(mount))
+  app.use(fragment, express.static(mount));
 }
 
-app.listen(3000)
-console.log('server listening on http://localhost:3000/')
-
+app.listen(3000);
+console.log('server listening on http://localhost:3000/');
