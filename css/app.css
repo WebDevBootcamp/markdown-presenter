@@ -1,6 +1,33 @@
+body {
+  padding-top: 60px;
+}
+
 #editor {
   height: 100px;
   width: 400px;
+}
+
+.topics-outline {
+  position: absolute;
+  top: 50px;
+  width: 300px;
+  z-index: 1000;
+}
+.topics-outline .list-group-item {
+  background-color: #f8f8f8;
+}
+.topics-outline a {
+  color: #333;
+}
+.topic-level-1 {
+  font-weight: bold;
+}
+.topic-level-2 {
+  font-weight: bold;
+  padding-left: 20px;
+}
+.topic-level-3 {
+  padding-left: 30px;
 }
 
 .display-previous,
