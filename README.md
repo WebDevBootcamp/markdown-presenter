@@ -170,6 +170,17 @@ var ref = null
 console.warn(ref.something)
 ```
 
+## Console Hooking
+
+In addition to displaying the results returned from a script block, the editor
+also hooks the console so that can be used to trace results within code. 
+
+```javascript.interactive
+console.log('This is a message');
+console.warn('Warnings work as well');
+console.error('OMG Bees!');
+```
+
 ## HTML Snippets
 
 HTML snippets can also be interactive within the editor.

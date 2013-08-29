@@ -68,25 +68,28 @@ body {
   width: 90%;
 }
 
+.panel .close {
+  margin-top: -3px;
+}
+.panel .log-message.warn {
+  color: #c09853;
+}
+.panel .log-message.error {
+  color: #b94a48;
+}
+.panel .log-message.debug {
+  color: #3a87ad;
+}
+.panel .log-message i {
+  display: inline-block;
+  width: 25px; 
+}
+
 .code-toolbar {
   padding-left: 10px;
 }
 .code-toolbar .btn {
   min-width: 45px;
-}
-
-.alert-muted {
-  background-color: #eeeeee;
-  border-color: #dcdcdc;
-  color: #666666;
-  text-shadow: none;
-}
-.alert-muted h1,
-.alert-muted h2,
-.alert-muted h3,
-.alert-muted h4 {
-  color: #666666;
-  text-shadow: none;
 }
 
 .full-width {

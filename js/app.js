@@ -340,20 +340,20 @@
 
       app.clearExecuteResults(pre);
 
-      var results = $('<div class="execute-results panel">')
+      var results = $('<div class="execute-results panel panel-default">')
         .insertAfter(pre);
 
       var syntax = pre.attr('class').split('.')[0];
       if(syntax === 'javascript') {
         app.hookConsole(results);
-        app.executeJavaScript(editor.getValue(), pre);
+        app.executeJavaScript(editor.getValue(), results);
       }
       else if(syntax === 'html') {
-        app.executeHtml(editor.getValue(), pre);
+        app.executeHtml(editor.getValue(), results);
       }
     },
 
-    executeJavaScript: function(code, pre) {
+    executeJavaScript: function(code, results) {
       // wrap things in an anonymous function so bare returns work
       // add newline before the trailing bracket so code that ends in a 
       // comment doesn't cause a problem
@@ -362,23 +362,23 @@
         // be gentle :)
         var result = eval(code);
 
-        app.displayCodeAlert(pre, result, 'success');
+        app.displayCodeAlert(results, 'Result: ' + result, 'success');
       }
       catch(error) {
-        app.displayCodeAlert(pre, error.message, 'danger');
+        app.displayCodeAlert(results, error.message, 'danger');
       }
     },
 
-    executeHtml: function(code, pre) {
+    executeHtml: function(code, results) {
       try {
         var el = $(code);
-        $('<div class="panel-heading">')
-          .append('<button type="button" class="close" data-dismiss="alert">&times;</button>')
+        $('<div class="panel-body">')
+          .append('<button type="button" class="close">&times;</button>')
           .append(el)
-          .prependTo(pre.next('.execute-results'));
+          .prependTo(results);
       }
       catch(error) {
-        app.displayCodeAlert(pre, error.message, 'error');
+        app.displayCodeAlert(results, error.message, 'error');
       }
     },
 
@@ -391,32 +391,52 @@
       app.clearExecuteResults(pre);
     },
 
-    displayCodeAlert: function(el, details, severity) {
+    displayCodeAlert: function(results, details, severity) {
       // need to format this better - JSON.stringify but safe
       var message = String(details);
 
-      $('<div class="panel-heading panel-' + severity + '">')
-        .append('<button type="button" class="close" data-dismiss="alert">&times;</button>')
+      $('<div class="panel-heading">')
+        .append('<button type="button" class="close">&times;</button>')
         .append(message)
-        .prependTo(el.next('.execute-results'));
+        .prependTo(results);
+
+      results.addClass('panel-' + severity);
     },
 
-    clearExecuteResults: function(el) {
+    clearExecuteResults: function(arg) {
       app.unhookConsole();
-      el.next('.execute-results').remove();
+      if(arg instanceof jQuery.Event) {
+        $(arg.target).closest('.execute-results').remove();
+      }
+      else {
+        arg.next('.execute-results').remove();
+      }
     },
 
-    hookConsole: function(el) {
+    hookConsole: function(results) {
       app._restoreConsole = {};
 
+      var group;
       var methods = [ 'log', 'warn', 'error', 'debug' ];
+      var icons = {
+        log: 'icon-info',
+        warn: 'icon-warning-sign',
+        error: 'icon-fire',
+        debug: 'icon-bug'
+      }
       _.each(methods, function(name) {
         app._restoreConsole[name] = console[name];
 
         console[name] = function(message) {
-          $('<div class="log-message">')
-            .text(name + ': ' + message)
-            .appendTo(el);
+          if(!group) {
+            group = $('<ul class="list-group">')
+              .appendTo(results);
+          }
+          
+          $('<li class="log-message list-group-item ' + name + '">')
+          	.append('<i class="' + icons[name] + '"> ')
+            .append('<span>' + message + '</span>')
+            .appendTo(group);
 
           // call original method as well
           app._restoreConsole[name].call(console, message);
@@ -556,6 +576,7 @@
       '.display-next click': 'displayNext',
       '.code-execute click': 'executeCode',
       '.code-refresh click': 'refreshCode',
+      '.panel .close click': 'clearExecuteResults',
       'document keyup': 'onKeyUp',
       'form submit': 'onFormSubmit'
     }
@@ -565,7 +586,7 @@
         throw new Error("Invalid handler: " + handler);
       }
 
-      var match = key.match(/([^ ]*) (.*)/);
+      var match = key.match(/(.*) (.*)/);
       var selector = match[1];
       var event = match[2];
       if(selector === 'document') {
