@@ -56,6 +56,10 @@ body {
   color: #666;
 }
 
+#settings-modal div.form-group {
+  width: 90%;
+}
+
 .code-toolbar {
   padding-left: 10px;
 }

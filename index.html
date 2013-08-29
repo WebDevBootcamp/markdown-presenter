@@ -25,7 +25,7 @@
       <div class="navbar-header">
         <ul class="nav navbar-nav">
           <li>
-            <a class="show-outline" href="#"><i class="icon-ellipsis-horizontal"></i></a>
+            <a class="toggle-outline" href="#"><i class="icon-ellipsis-horizontal"></i></a>
           </li>
         </ul>
         <a class="section-title navbar-brand"></a>
@@ -35,7 +35,7 @@
     <div class="topics-outline list-group hide">
       <div class="topics">
       </div>
-      <a href="#" class="list-group-item">
+      <a href="#settings-modal" class="list-group-item" data-toggle="modal">
         <i class="icon-cog"></i> Settings
       </a>
     </div>
@@ -50,23 +50,24 @@
       </div>
     </div>
 
-    <div class="settings-modal modal hide fade">
-      <div class="modal-header">
-        <h3>Presentation Settings</h3>
-      </div>
-      <div class="modal-body">
-        <form class="form-inline">
-          <label>Markdown source</label>
-          <div class="input-append">
-            <input type="text" class="md-source span4"/>
-            <button class="md-load btn"><i class="icon-download-alt"></i></button>
+    <div class="modal fade" id="settings-modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Presentation Settings</h3>
           </div>
-        </form>
-        <div class="settings-message alert hide"></div>
-        <div class="presentation-outline"></div>
-      </div>
-      <div class="modal-footer">
-        <btn class="btn" data-dismiss="modal">Close</btn>
+          <div class="modal-body">
+            <form class="form-inline" role="form">
+              <div class="form-group">
+                <input type="text" class="md-source form-control" placeholder="Markdown Source">
+              </div>
+              <button class="md-load btn"><i class="icon-download-alt"></i></button>
+             </form>
+            <div class="settings-message alert hide"></div>
+            <div class="presentation-outline"></div>
+          </div>
+        </div>
       </div>
     </div>
 

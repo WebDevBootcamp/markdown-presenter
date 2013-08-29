@@ -254,11 +254,6 @@
           	.attr('href', href)
           	.text(child.label)
             .appendTo(outline);
-          /*
-          var item = $('<li>')
-            .append('<a class="navigate" href="' + href + '">' + child.label + '</a>')
-            .appendTo(el)
-          */
 
           if(child.children && (child.children.length > 0)) {
             var childOffset = appendChildren(child.children, level + 1, pageOffset)
@@ -317,8 +312,14 @@
       return false;
     },
 
-    showOutline: function() {
-      $('.topics-outline').removeClass('hide');
+    toggleOutline: function() {
+      var outline =  $('.topics-outline');
+      if(outline.is(':visible')) {
+        outline.addClass('hide');
+      }
+      else {
+        outline.removeClass('hide');
+      }
     },
     
     displayPrevious: function() {
@@ -550,7 +551,7 @@
     var handlers = {
       '.md-load click': 'loadMarkdownUrl',
       '.navigate click': 'handleNavigate',
-      '.show-outline click': 'showOutline',
+      '.toggle-outline click': 'toggleOutline',
       '.display-previous click': 'displayPrevious',
       '.display-next click': 'displayNext',
       '.code-execute click': 'executeCode',
