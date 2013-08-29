@@ -1,27 +1,62 @@
+body {
+  padding-top: 60px;
+}
+
 #editor {
   height: 100px;
   width: 400px;
 }
 
+.topics-outline {
+  position: absolute;
+  top: 50px;
+  width: 300px;
+  z-index: 1000;
+}
+.topics-outline .list-group-item {
+  background-color: #f8f8f8;
+}
+.topics-outline a {
+  color: #333;
+}
+.topic-level-1 {
+  font-weight: bold;
+}
+.topic-level-2 {
+  font-weight: bold;
+  padding-left: 20px;
+}
+.topic-level-3 {
+  padding-left: 30px;
+}
+
 .display-previous,
 .display-next {
-  position: absolute;
-  margin-top: 42px;
+  position: fixed;
   top: 0;
   bottom: 0;
   width: 40px;
-  text-align: center;
-  padding-top: 40%;
   font-weight: bold;
   font-size: 125%;
   cursor: pointer;
   color: transparent;
 }
+.display-previous i,
+.display-next i {
+  position: fixed;
+  top: 55%;
+}
 .display-previous {
   left: 0;
 }
+.display-previous i {
+  left: 15px;
+}
 .display-next {
   right: 0;
+}
+.display-next i {
+  right: 15px;
 }
 .display-previous:hover,
 .display-next:hover {
@@ -29,25 +64,32 @@
   color: #666;
 }
 
+#settings-modal div.form-group {
+  width: 90%;
+}
+
+.panel .close {
+  margin-top: -3px;
+}
+.panel .log-message.warn {
+  color: #c09853;
+}
+.panel .log-message.error {
+  color: #b94a48;
+}
+.panel .log-message.debug {
+  color: #3a87ad;
+}
+.panel .log-message i {
+  display: inline-block;
+  width: 25px; 
+}
+
 .code-toolbar {
   padding-left: 10px;
 }
 .code-toolbar .btn {
   min-width: 45px;
-}
-
-.alert-muted {
-  background-color: #eeeeee;
-  border-color: #dcdcdc;
-  color: #666666;
-  text-shadow: none;
-}
-.alert-muted h1,
-.alert-muted h2,
-.alert-muted h3,
-.alert-muted h4 {
-  color: #666666;
-  text-shadow: none;
 }
 
 .full-width {
@@ -73,3 +115,9 @@
 .is-visible {
   color: #468847;
 }
+
+/* TODO - move to bootswatch */
+.navbar-brand {
+  max-width: 500px;
+}
+
