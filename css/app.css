@@ -32,23 +32,31 @@ body {
 
 .display-previous,
 .display-next {
-  position: absolute;
-  margin-top: 42px;
+  position: fixed;
   top: 0;
   bottom: 0;
   width: 40px;
-  text-align: center;
-  padding-top: 40%;
   font-weight: bold;
   font-size: 125%;
   cursor: pointer;
   color: transparent;
 }
+.display-previous i,
+.display-next i {
+  position: fixed;
+  top: 55%;
+}
 .display-previous {
   left: 0;
 }
+.display-previous i {
+  left: 15px;
+}
 .display-next {
   right: 0;
+}
+.display-next i {
+  right: 15px;
 }
 .display-previous:hover,
 .display-next:hover {
