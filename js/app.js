@@ -360,11 +360,63 @@
         // be gentle :)
         var result = eval(code);
 
-        app.displayCodeAlert(results, 'Result: ' + result, 'success');
+        // display more useful type information
+        var type;
+        if(result === undefined) {
+          type = 'undefined';
+        }
+        else if(result === null) {
+          type = 'null';
+        }
+        else {
+          type = result.constructor.name.toLowerCase();
+        }
+
+        var formatted = app.formatResult(result);
+        if(formatted.length > 80) {
+          formatted = formatted.substring(0, 80) + '...';
+        }
+        app.displayCodeAlert(results,
+          'Result <em>[' + type + ']</em>: ' + formatted, 'success');
       }
       catch(error) {
         app.displayCodeAlert(results, error.message, 'danger');
       }
+    },
+
+    formatResult: function(result, shallow) {
+      if((result === null) || (result === undefined)) {
+        // omit top level empty results
+        return shallow ? String(result) : '';
+      }
+      else if(result instanceof Array) {
+        if(shallow) {
+          return '[...]';
+        }
+        else {
+          var items = _.collect(result, function(item) {
+            return app.formatResult(item, true);
+          });
+          console.warn(items)
+          return '[ ' + items.join(', ') + ' ]';
+        }
+      }
+      else if((typeof result === 'object') && !(result instanceof Date)) {
+        if(_.isEmpty(result)) {
+          return '{}';
+        }
+        else if(shallow) {
+          return '{...}';
+        }
+        else {
+          var items = _.collect(_.keys(result), function(key) {
+            return key + ': ' + app.formatResult(result[key], true);
+          });
+          return '{ ' + items.join(', ') + ' }';
+        }
+      }
+
+      return String(result);
     },
 
     executeHtml: function(code, results) {
