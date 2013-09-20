@@ -397,7 +397,6 @@
           var items = _.collect(result, function(item) {
             return app.formatResult(item, true);
           });
-          console.warn(items)
           return '[ ' + items.join(', ') + ' ]';
         }
       }
@@ -482,7 +481,7 @@
             group = $('<ul class="list-group">')
               .appendTo(results);
           }
-          
+
           $('<li class="log-message list-group-item ' + name + '">')
           	.append('<i class="' + icons[name] + '"> ')
             .append('<span>' + message + '</span>')
