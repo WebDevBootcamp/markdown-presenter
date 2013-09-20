@@ -13,15 +13,13 @@
       // see if content was specified by the query string
       var mdPath = params['md'];
 
-      // display settings if no content URL
+      // display readme if no explicit page specified
       if(!mdPath) {
-        $('.settings-modal').modal('show');
+        mdPath = 'README.md'
       }
-      else {
-        // push md path into input and load it
-        $('.md-source').val(mdPath);
-        app.loadMarkdownUrl(params);
-      }
+
+      $('.md-source').val(mdPath);
+      app.loadMarkdownUrl(params);
     },
 
     parseSearchParameters: function() {
