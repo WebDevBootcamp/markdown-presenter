@@ -237,6 +237,7 @@ that let's you specify the file to display. For instance:
 
   <http://webdevbootcamp.github.io/markdown-presenter/?md=README.md>
 
+ o
 The Markdown content is fetched using AJAX at the moment, which restricts
 the content to being on the same domain as the presenter. This is probably
 a good thing given that the code editor allows executing arbitary JavaScript
