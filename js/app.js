@@ -376,8 +376,11 @@
         if(formatted.length > 80) {
           formatted = formatted.substring(0, 80) + '...';
         }
-        app.displayCodeAlert(results,
-          'Result <em>[' + type + ']</em>: ' + formatted, 'success');
+        var message = 'Result <em>[' + type + ']</em>';
+        if(formatted) {
+          message = ': ' + formatted;
+        }
+        app.displayCodeAlert(results, message, 'success');
       }
       catch(error) {
         app.displayCodeAlert(results, error.message, 'danger');
