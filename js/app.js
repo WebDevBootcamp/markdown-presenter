@@ -378,7 +378,7 @@
         }
         var message = 'Result <em>[' + type + ']</em>';
         if(formatted) {
-          message = ': ' + formatted;
+          message += ': ' + formatted;
         }
         app.displayCodeAlert(results, message, 'success');
       }
