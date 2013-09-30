@@ -338,10 +338,11 @@
 
       app.clearExecuteResults(pre);
 
+      var syntax = pre.attr('class').split('.')[0];
       var results = $('<div class="execute-results panel panel-default">')
+        .addClass(syntax)
         .insertAfter(pre);
 
-      var syntax = pre.attr('class').split('.')[0];
       if(syntax === 'javascript') {
         app.hookConsole(results);
         app.executeJavaScript(editor.getValue(), results);
