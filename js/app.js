@@ -338,10 +338,11 @@
 
       app.clearExecuteResults(pre);
 
+      var syntax = pre.attr('class').split('.')[0];
       var results = $('<div class="execute-results panel panel-default">')
+        .addClass(syntax)
         .insertAfter(pre);
 
-      var syntax = pre.attr('class').split('.')[0];
       if(syntax === 'javascript') {
         app.hookConsole(results);
         app.executeJavaScript(editor.getValue(), results);
@@ -597,19 +598,6 @@
       editor.resize();
     },
 
-    onKeyUp: function(ev) {
-      // need to allow keyboard navigation in code blocks
-      if($(ev.target).closest('pre').length) {
-        return;
-      }
-      if(ev.which === 37) {
-        app.displayPrevious();
-      }
-      else if(ev.which === 39) {
-        app.displayNext();
-      }
-    },
-
     // prevents page from reloading when forms are submitted
     onFormSubmit: function() {
       return false;
@@ -629,7 +617,6 @@
       '.code-execute click': 'executeCode',
       '.code-refresh click': 'refreshCode',
       '.panel .close click': 'clearExecuteResults',
-      'document keyup': 'onKeyUp',
       'form submit': 'onFormSubmit'
     }
 

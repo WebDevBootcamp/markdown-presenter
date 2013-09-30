@@ -92,6 +92,13 @@ body {
   min-width: 45px;
 }
 
+.execute-results.html .panel-body {
+  padding-right: 35px;
+}
+.execute-results.html .panel-body .close {
+  margin-right: -20px;
+}
+
 .full-width {
   position: absolute;
   left: 0;
