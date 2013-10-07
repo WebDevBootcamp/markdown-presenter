@@ -126,6 +126,7 @@
           content: []
         }
       var stack = [top];
+      var style = null;
 
       for(var index = 0; index < tree.length; index++) {
         var node = tree[index];
@@ -162,12 +163,20 @@
             next.content.push(node);
           }
 
+          if(style) {
+            next.content.push(style);
+          }
+
           top.children.push(next);
           top = next;
           stack.push(top);
         }
         // otherwise add content to the current section
         else {
+          // rememeber style sections so we can add to each page
+          if((tag === false)  && (node[1].match(/^\<style\>/))) {
+            style = node;
+          }
           if(top.level > 0) {
             var fixed = app.fixupContent(node, path);
             stack[stack.length - 1].content.push(fixed);
@@ -319,7 +328,7 @@
         outline.removeClass('hide');
       }
     },
-    
+
     displayPrevious: function() {
       if(pageIndex > 0) {
         app.renderPage(pageIndex - 1);
@@ -344,7 +353,6 @@
         .insertAfter(pre);
 
       if(syntax === 'javascript') {
-        app.hookConsole(results);
         app.executeJavaScript(editor.getValue(), results);
       }
       else if(syntax === 'html') {
@@ -353,6 +361,9 @@
     },
 
     executeJavaScript: function(code, results) {
+      app.hookConsole(results);
+      app.hookjQuery(results);
+
       // wrap things in an anonymous function so bare returns work
       // add newline before the trailing bracket so code that ends in a 
       // comment doesn't cause a problem
@@ -458,6 +469,7 @@
 
     clearExecuteResults: function(arg) {
       app.unhookConsole();
+      app.unhookjQuery();
       if(arg instanceof jQuery.Event) {
         $(arg.target).closest('.execute-results').remove();
       }
@@ -487,7 +499,7 @@
           }
 
           $('<li class="log-message list-group-item ' + name + '">')
-          	.append('<i class="' + icons[name] + '"> ')
+            .append('<i class="' + icons[name] + '"> ')
             .append('<span>' + message + '</span>')
             .appendTo(group);
 
@@ -505,6 +517,37 @@
           console[key] = app._restoreConsole[key];
         }
         delete app._restoreConsole;
+      }
+    },
+
+    hookjQuery: function() {
+      app._restoreOn = $.fn.on;
+      app._removeBindings = [];
+
+      // hook jquery bind method to listen to event handlers so we can remove
+      // them when the sample is reset
+      $.fn.extend({
+        on: function(event) {
+          var ref = this;
+          app._removeBindings.push(function() {
+            ref.off(event);
+          });
+          app._restoreOn.apply(this, arguments);
+        }
+      });
+    },
+
+    unhookjQuery: function() {
+      if(app._restoreOn) {
+        for(var index = 0; index < app._removeBindings.length; index++) {
+          app._removeBindings[index]();
+        }
+        delete app._removeBindings;
+
+        $.fn.extend({
+          on: app._restoreOn
+        });
+        delete app._restoreOn;
       }
     },
 
